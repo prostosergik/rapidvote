@@ -35,38 +35,72 @@
 
 		<style type="text/css">
 
-			.rapidvote {
-				width: 100%;
+			div.rapidvote {
+				/*width: 100%;*/
 				position: relative;
 				float: left;
 				margin: 0 0 50px 0;
+				font-family: Arial, helvetica, sans-seif;
+
+				/*float: right;*/
 			}
 
+			div.rapidvote div.rapidvote_button {
+				position: relative;
+				float: left;
+			}
 
-			.rapidvote div.rapidvote_button {
+			div.rapidvote div.rapidvote_button div.button_label {
 				position: relative;
 				float: left;
 				margin: 0 20px 0 0;
 				height: 30px;
 				border-radius: 5px;
 				line-height: 30px;
-				padding: 0 30px 0 10px;
+				padding: 0 40px 0 10px;
 				color: #FFFFFF;
 				background: #CCCCCC;
 				border: 1px solid #CCC;
 				cursor: pointer;
+				font-size: 14px;
 			}
 
 
-			.rapidvote div.rapidvote_button span.votes {
+			div.rapidvote div.rapidvote_button div.button_label span.votes {
 				position: absolute;
 				top: 0;
 				right: 0;
 				border-radius: 0 5px 5px 0;
 				background: #FFFFFF;
-				width: 20px;
+				min-width: 20px;
 				text-align: center;
 				color: #000000;
+				font-size: 12px;
+				padding: 0 5px;
+			}
+
+			div.rapidvote div.rapidvote_button div.social_buttons {
+				position: absolute;
+				border: 1px solid red;
+				border-radius: 10px;
+				bottom: 32px;
+				width: 190px;
+				font-size: 13px;
+				background: #FFFFFF;
+				padding: 10px;
+				display: none;
+				left: 0;
+				z-index: 99999;
+			}
+
+			div.rapidvote div.rapidvote_button div.social_buttons.under {
+				bottom: auto;
+				top: 32px;
+			}
+
+			div.rapidvote div.rapidvote_button div.social_buttons.right {
+				left: auto;
+				right: 20px; /*Value of margin-right of the button*/
 			}
 
 
@@ -75,13 +109,183 @@
 	</head>
 	<body>
 
+		<script type="text/template" id="button_template">
+				<div class="rapidvote_button {{button_key}}">
+                    <div class="button_label">
+                    	{{button_label}}
+                    	<span class="votes">{{button_value}}</span>
+                    </div>
+
+                    <div class="social_buttons">
+                        <div class="share_text">{{share_text}}</div>
+                        <div class="share_label">Share in social media:</div>
+                        <div class="share_buttons">
+	                        <a href="javascript:void(0);" target="_blank" class="share_button_twitter"><img src="img/twitter.png" alt="twitter"/></a>
+	                        <a href="javascript:void(0);" target="_blank" class="share_button_facebook"><img src="img/facebook.png" alt="facebook"/></a>
+                        </div>
+
+                    </div>
+                </div>
+		</script>
+
+
+
 		<br />
 		<br />
 		<div class="rapidvote" id="my_first_poll" data-poll-id="my_first_poll">...</div>
 		<br />
 		<br />
-		<div class="rapidvote" id="my_second_poll" data-poll-id="my_second_poll">...</div>
-
+		<br />
+		<br />
+		<br />
+		<br />
+		<div class="rapidvote" id="my_second_poll" style="float: right;" data-poll-id="my_second_poll">...</div>
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
 
 	</body>
 </html>

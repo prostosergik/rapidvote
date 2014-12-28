@@ -18,9 +18,9 @@
         get_url: 'get_data.php?poll_id=',
         save_url: 'save_data.php?poll_id=',
         buttons: {
-            'yes': {label:'Yes', value: 0},
-            'no': {label:'No', value: 0},
-            'mayb': {label:'MayB', value: 0}
+            'yes':  { label:'Yes',  value: 0},
+            'no':   { label:'No',   value: 0},
+            'mayb': { label:'MayB', value: 0}
         }
     };
 
@@ -56,14 +56,13 @@
     }
 
 
-    // Constructor, initialise everything you need here
+    // Constructor
     var RapidVote = function(element, options) {
         this.element = element;
         this.options = options;
         this.buttons = options.buttons;
 
         this.poll_id = typeof(options.poll_id) != 'undefined' ? options.poll_id : this.element.attr('data-poll-id');
-
     };
 
     // Plugin public methods and shared properties
@@ -82,9 +81,22 @@
                 }
             });
 
+            //close event for share window
+            $(document).on('click', function(){
+                $('div.social_buttons').fadeOut();
+            });
+
+            $(document).on('keydown', function(e) {
+                //esc
+                if (e.keyCode == 27) {
+                    $('div.social_buttons').fadeOut();
+                }
+            });
+
             _jsonp_request(this.options.get_url+this.poll_id);
         },
 
+        //init buttons data
         get_buttons_data: function(data){
             $.each(this.buttons, function(key, button) {
                 if(data.buttons[key] != undefined) {
@@ -95,7 +107,36 @@
             this.draw();
         },
 
+
+        //after button submitted.
         set_buttons_data: function(data){
+
+            var $button = this.element.find('div.rapidvote_button.'+data.button);
+            var $share_window = this.element.find('div.'+data.button+' div.social_buttons');
+
+            //show share
+            if(data.incremented) {
+
+
+                //if position should be under
+                if($share_window.outerHeight() > ($button.offset().top - $(document).scrollTop())) {
+                    $share_window.addClass('under');
+                } else {
+                    $share_window.removeClass('under');
+                }
+
+                var button_margin_right = parseInt($button.find('div.button_label').css('margin-right')) || 20;
+
+                if($share_window.outerWidth() > ($(document).width() - $button.offset().left)-$button.outerWidth() + button_margin_right) {
+                    $share_window.addClass('right');
+                } else {
+                    $share_window.removeClass('right');
+                }
+
+
+                $share_window.fadeIn();
+            }
+            //save storage and update value on button
             _localStorageSet(data.poll_id, data.button, data.incremented);
             this.element.find('div.'+data.button+' span.votes').html(data.buttons[data.button]);
         },
@@ -109,9 +150,25 @@
             $el.html('');
 
             $.each(this.buttons, function(key, button) {
-                var $button = $('<div class="rapidvote_button '+key+'">'+button.label+'<span class="votes">'+button.value+'</span></div>');
 
-                $button.on('click', function(){
+                var share_text = 'Hey! I just voted "{{button_label}}" on '+document.location.hostname+'!';
+                share_text = share_text.replace(/{{button_label}}/g, button.label);
+
+                var button_html = $('#button_template').html();
+
+
+                button_html = button_html.replace(/{{share_text}}/g, share_text);
+                button_html = button_html.replace(/{{button_key}}/g, key);
+                button_html = button_html.replace(/{{button_label}}/g, button.label);
+                button_html = button_html.replace(/{{button_value}}/g, button.value);
+
+                // var $button = $('<div class="rapidvote_button '+key+'">'+button.label+'<span class="votes">'+button.value+'</span></div>');
+                var $button = $(button_html);
+
+
+
+
+                $button.find('div.button_label').on('click', function(){
 
                     var is_incremented = _localStorageIsIncremented($this.poll_id, key);
 
@@ -126,6 +183,22 @@
                     _jsonp_request($this.options.save_url+$this.poll_id+'?button='+key+'&action='+(is_incremented ? 'dec' : 'inc'));
 
                 });
+
+
+                $button.find('.share_button_twitter').on('click', function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var url="https://twitter.com/intent/tweet?text="+share_text
+                    window.open(url, 'Twitter', 'width=630,height=280,scrollbars=no,toolbar=no,location=no,menubar=no');
+                });
+
+                $button.find('.share_button_facebook').on('click', function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var url = "https://www.facebook.com/sharer/sharer.php?u="+document.location.href;
+                    window.open(url, 'Share on Facebook', "width=800,height=450,menubar=no,location=no,resizable=no,scrollbars=no,status=no");
+                });
+
 
 
                 $button.appendTo($el);
