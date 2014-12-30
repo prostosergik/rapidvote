@@ -1,3 +1,17 @@
+/*
+ * jQuery Rapid Vote Plugin
+ *
+ * Copyright (c) 2014 Serge Liskovsky
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE 2:
+ * https://www.gnu.org/licenses/gpl2.html
+ *
+ * Project home:
+ * https://github.com/prostosergik/rapidvote/
+ *
+ * Version: 1.1
+ *
+ */
 
 ;(function (factory) {
   if(typeof define==='function' && define.amd){
@@ -17,6 +31,21 @@
     var defaults = {
         get_url: 'get_data.php?poll_id=',
         save_url: 'save_data.php?poll_id=',
+        template: '<div class="rapidvote_button {{button_key}}">\
+                    <div class="button_label">\
+                        {{button_label}}\
+                        <span class="votes">{{button_value}}</span>\
+                    </div>\
+                    <div class="social_buttons">\
+                        <div class="share_text">{{share_text}}</div>\
+                        <div class="share_label">Share in social media:</div>\
+                        <div class="share_buttons">\
+                            <a href="javascript:void(0);" target="_blank" class="share_button_twitter"><img src="img/twitter.png" alt="twitter"/></a>\
+                            <a href="javascript:void(0);" target="_blank" class="share_button_facebook"><img src="img/facebook.png" alt="facebook"/></a>\
+                        </div>\
+                    </div>\
+                </div>',
+        share_text: 'Hey! I just voted "{{button_label}}" on '+document.location.hostname+'!',
         buttons: {
             'yes':  { label:'Yes',  value: 0},
             'no':   { label:'No',   value: 0},
@@ -151,11 +180,13 @@
 
             $.each(this.buttons, function(key, button) {
 
-                var share_text = 'Hey! I just voted "{{button_label}}" on '+document.location.hostname+'!';
+                var share_text = $this.options.share_text;
                 share_text = share_text.replace(/{{button_label}}/g, button.label);
 
-                var button_html = $('#button_template').html();
+                var button_html = ($($this.options.template).selector) ? $($this.options.template).html() : $this.options.template; //let jQuery do all magic to get HTML for us from text/template or jqyery selector or html string
 
+
+                p(button_html);
 
                 button_html = button_html.replace(/{{share_text}}/g, share_text);
                 button_html = button_html.replace(/{{button_key}}/g, key);
@@ -267,7 +298,6 @@
 
 
 //fix for old browsers. Cookies immitation of localStorage
-
 if (!window.localStorage) {
   window.localStorage = {
     getItem: function (sKey) {

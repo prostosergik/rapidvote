@@ -13,6 +13,7 @@
 			$(function() {
 
 				$('#my_first_poll').rapidvote({
+					template: $('#button_template'),
 					get_url: 'http://pageconstructor.ps/functionality/rapidvote/get/',
 					save_url: 'http://pageconstructor.ps/functionality/rapidvote/set/'
 				});
@@ -21,6 +22,7 @@
 				$('#my_second_poll').rapidvote({
 					get_url: 'http://pageconstructor.ps/functionality/rapidvote/get/',
 					save_url: 'http://pageconstructor.ps/functionality/rapidvote/set/',
+					share_text: "Fuck this {{button_label}}!",
 					buttons: {
 			            'shure': {label:'Yes'},
 			            'not_shure': {label:'No'},
@@ -113,7 +115,7 @@
 				<div class="rapidvote_button {{button_key}}">
                     <div class="button_label">
                     	{{button_label}}
-                    	<span class="votes">{{button_value}}</span>
+                    	???<span class="votes">{{button_value}}</span>
                     </div>
 
                     <div class="social_buttons">
