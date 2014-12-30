@@ -40,8 +40,8 @@
                         <div class="share_text">{{share_text}}</div>\
                         <div class="share_label">Share in social media:</div>\
                         <div class="share_buttons">\
-                            <a href="javascript:void(0);" target="_blank" class="share_button_twitter"><img src="img/twitter.png" alt="twitter"/></a>\
-                            <a href="javascript:void(0);" target="_blank" class="share_button_facebook"><img src="img/facebook.png" alt="facebook"/></a>\
+                            <a href="javascript:void(0);" target="_blank" class="share_button share_button_twitter">&nbsp;</a>\
+                            <a href="javascript:void(0);" target="_blank" class="share_button share_button_facebook">&nbsp;</a>\
                         </div>\
                     </div>\
                 </div>',
