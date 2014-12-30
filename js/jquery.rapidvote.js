@@ -185,9 +185,6 @@
 
                 var button_html = ($($this.options.template).selector) ? $($this.options.template).html() : $this.options.template; //let jQuery do all magic to get HTML for us from text/template or jqyery selector or html string
 
-
-                p(button_html);
-
                 button_html = button_html.replace(/{{share_text}}/g, share_text);
                 button_html = button_html.replace(/{{button_key}}/g, key);
                 button_html = button_html.replace(/{{button_label}}/g, button.label);
@@ -195,9 +192,6 @@
 
                 // var $button = $('<div class="rapidvote_button '+key+'">'+button.label+'<span class="votes">'+button.value+'</span></div>');
                 var $button = $(button_html);
-
-
-
 
                 $button.find('div.button_label').on('click', function(){
 
