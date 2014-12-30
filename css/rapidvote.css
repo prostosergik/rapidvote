@@ -44,10 +44,10 @@
 
 			div.rapidvote div.rapidvote_button div.social_buttons {
 				position: absolute;
-				border: 1px solid red;
-				border-radius: 10px;
+				border: 3px solid rgb(196, 196, 196);
+				border-radius: 3px;
 				bottom: 32px;
-				width: 190px;
+				width: 270px;
 				font-size: 13px;
 				background: #FFFFFF;
 				padding: 10px;
@@ -56,22 +56,35 @@
 				z-index: 99999;
 			}
 
+			div.rapidvote div.rapidvote_button div.social_buttons div.share_text {
+				border: 1px solid #CCCCCC;
+				background: #EEEEEE;
+				padding: 3px;
+				margin: 0 0 10px 0;
+			}
 
-			div.rapidvote div.rapidvote_button div.social_buttons a.share_button {
+
+			div.rapidvote div.rapidvote_button div.social_buttons div.share_label {
+				margin: 0 0 10px 0;
+				font-weight: bold;
+			}
+
+			div.rapidvote div.rapidvote_button div.social_buttons div.share_buttons a.share_button {
 				display: block;
 				width: 20px;
 				height: 20px;
 				float: left;
 				margin: 0 10px 0 0px;
+				text-decoration: none;
 			}
 
 
-			div.rapidvote div.rapidvote_button div.social_buttons a.share_button_twitter {
+			div.rapidvote div.rapidvote_button div.social_buttons div.share_buttons a.share_button_twitter {
 				background: url('../img/twitter.png') no-repeat center center;
 			}
 
 
-			div.rapidvote div.rapidvote_button div.social_buttons a.share_button_facebook {
+			div.rapidvote div.rapidvote_button div.social_buttons div.share_buttons a.share_button_facebook {
 				background: url('../img/facebook.png') no-repeat center center;
 			}
 
