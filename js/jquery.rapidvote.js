@@ -46,6 +46,7 @@
                     </div>\
                 </div>',
         share_text: 'Hey! I just voted "{{button_label}}" on '+document.location.hostname+'!',
+        only_render: false,
         buttons: {
             'yes':  { label:'Yes',  value: 0},
             'no':   { label:'No',   value: 0},
@@ -89,7 +90,6 @@
     var RapidVote = function(element, options) {
         this.element = element;
         this.options = options;
-        this.buttons = options.buttons;
 
         this.poll_id = typeof(options.poll_id) != 'undefined' ? options.poll_id : this.element.attr('data-poll-id');
     };
@@ -99,22 +99,15 @@
         // Reset constructor
         constructor: RapidVote,
 
-
+        //add basic events after instance created
         init: function() {
-            this.element.html('Loading...');
-
-            //init buttons
-            $.each(this.buttons, function(key, button) {
-                if(!button.value) {
-                    button.value = 0;
-                }
-            });
 
             //close event for share window
             $(document).on('click', function(){
                 $('div.social_buttons').fadeOut();
             });
 
+            //close on escape key
             $(document).on('keydown', function(e) {
                 //esc
                 if (e.keyCode == 27) {
@@ -122,12 +115,31 @@
                 }
             });
 
+            this.render();
+        },
+
+        //get buttons data and force render with all options that can be changed. Can accept buttons object as option.
+        render: function(buttons) {
+
+            if(buttons) {
+                this.options.buttons = buttons;
+            }
+
+            this.element.html('Loading...');
+
+            //init buttons
+            $.each(this.options.buttons, function(key, button) {
+                if(!button.value) {
+                    button.value = 0;
+                }
+            });
+
             _jsonp_request(this.options.get_url+this.poll_id);
         },
 
-        //init buttons data
+        //init buttons values after recieving it with JSONp
         get_buttons_data: function(data){
-            $.each(this.buttons, function(key, button) {
+            $.each(this.options.buttons, function(key, button) {
                 if(data.buttons[key] != undefined) {
                     button.value = data.buttons[key];
                 }
@@ -145,7 +157,6 @@
 
             //show share
             if(data.incremented) {
-
 
                 //if position should be under
                 if($share_window.outerHeight() > ($button.offset().top - $(document).scrollTop())) {
@@ -178,7 +189,7 @@
 
             $el.html('');
 
-            $.each(this.buttons, function(key, button) {
+            $.each(this.options.buttons, function(key, button) {
 
                 var share_text = $this.options.share_text;
                 share_text = share_text.replace(/{{button_label}}/g, button.label);
@@ -190,39 +201,46 @@
                 button_html = button_html.replace(/{{button_label}}/g, button.label);
                 button_html = button_html.replace(/{{button_value}}/g, button.value);
 
-                // var $button = $('<div class="rapidvote_button '+key+'">'+button.label+'<span class="votes">'+button.value+'</span></div>');
                 var $button = $(button_html);
 
-                $button.find('div.button_label').on('click', function(){
+                //only render mode -  only draws buttons.
+                if(!$this.options.only_render) {
 
-                    var is_incremented = _localStorageIsIncremented($this.poll_id, key);
+                    $button.find('div.button_label').off('click');
+                    $button.find('div.button_label').on('click', function(){
 
-                    if(is_incremented) {
-                        button.value--;
-                    } else {
-                        button.value++;
-                    }
+                        var is_incremented = _localStorageIsIncremented($this.poll_id, key);
 
-                    //storage values will be saved after callback executed.
-                    //TODO: add check for question mark in URL!
-                    _jsonp_request($this.options.save_url+$this.poll_id+'?button='+key+'&action='+(is_incremented ? 'dec' : 'inc'));
+                        if(is_incremented) {
+                            button.value--;
+                        } else {
+                            button.value++;
+                        }
 
-                });
+                        //storage values will be saved after callback executed.
+                        //TODO: add check for question mark in URL!
+                        _jsonp_request($this.options.save_url+$this.poll_id+'?button='+key+'&action='+(is_incremented ? 'dec' : 'inc'));
+
+                    });
 
 
-                $button.find('.share_button_twitter').on('click', function(e){
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var url="https://twitter.com/intent/tweet?text="+share_text
-                    window.open(url, 'Twitter', 'width=630,height=280,scrollbars=no,toolbar=no,location=no,menubar=no');
-                });
+                    $button.find('.share_button_twitter').off('click');
+                    $button.find('.share_button_twitter').on('click', function(e){
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var url="https://twitter.com/intent/tweet?text="+share_text
+                        window.open(url, 'Twitter', 'width=630,height=280,scrollbars=no,toolbar=no,location=no,menubar=no');
+                    });
 
-                $button.find('.share_button_facebook').on('click', function(e){
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var url = "https://www.facebook.com/sharer/sharer.php?u="+document.location.href;
-                    window.open(url, 'Share on Facebook', "width=800,height=450,menubar=no,location=no,resizable=no,scrollbars=no,status=no");
-                });
+                    $button.find('.share_button_facebook').off('click');
+                    $button.find('.share_button_facebook').on('click', function(e){
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var url = "https://www.facebook.com/sharer/sharer.php?u="+document.location.href;
+                        window.open(url, 'Share on Facebook', "width=800,height=450,menubar=no,location=no,resizable=no,scrollbars=no,status=no");
+                    });
+
+                }
 
 
 
@@ -235,7 +253,6 @@
 
 
     document.rapidvote = {};
-
 
     // Create the jQuery plugin
     $.fn.rapidvote = function(options) {
