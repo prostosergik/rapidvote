@@ -48,6 +48,7 @@
                 </div>',
         share_text: 'Hey! I just voted "{{button_label}}" on '+document.location.hostname+'!',
         only_render: false,
+        csrf: false,
         buttons: {
             'yes':  { label:'Yes',  value: 0},
             'no':   { label:'No',   value: 0},
@@ -135,7 +136,12 @@
                 }
             });
 
-            _jsonp_request(this.options.get_url+this.poll_id);
+            var req_url = this.options.get_url+
+                          this.poll_id+
+                          (this.options.get_url.search(/\?/) != -1 ? '&' : '?')+
+                          (this.options.csrf ? 'csrf='+this.options.csrf : '');
+
+            _jsonp_request(req_url);
         },
 
         //init buttons values after recieving it with JSONp
@@ -174,8 +180,12 @@
                     $share_window.removeClass('right');
                 }
 
-
+                //close others
+                $('div.social_buttons').fadeOut();
+                $share_window.off('click').on('click', function(e) { e.stopPropagation(); });
                 $share_window.fadeIn();
+            } else {
+                $share_window.fadeOut();
             }
             //save storage and update value on button
             _localStorageSet(data.poll_id, data.button, data.incremented);
@@ -208,7 +218,8 @@
                 if(!$this.options.only_render) {
 
                     $button.find('div.button_label').off('click');
-                    $button.find('div.button_label').on('click', function(){
+                    $button.find('div.button_label').on('click', function(e){
+                        e.stopPropagation();
 
                         var is_incremented = _localStorageIsIncremented($this.poll_id, key);
 
@@ -220,7 +231,13 @@
 
                         //storage values will be saved after callback executed.
                         //TODO: add check for question mark in URL!
-                        _jsonp_request($this.options.save_url+$this.poll_id+'?button='+key+'&action='+(is_incremented ? 'dec' : 'inc'));
+                        var req_url = $this.options.save_url+
+                                      $this.poll_id+
+                                      ($this.options.save_url.search(/\?/) != -1 ? '&' : '?')+'button='+key+
+                                      '&action='+(is_incremented ? 'dec' : 'inc')+
+                                      ($this.options.csrf ? '&csrf='+$this.options.csrf : '');
+
+                        _jsonp_request(req_url);
 
                     });
 
@@ -229,7 +246,7 @@
                     $button.find('.share_button_twitter').on('click', function(e){
                         e.preventDefault();
                         e.stopPropagation();
-                        var url="https://twitter.com/intent/tweet?text="+share_text
+                        var url="https://twitter.com/intent/tweet?text="+encodeURIComponent(share_text)
                         window.open(url, 'Twitter', 'width=630,height=280,scrollbars=no,toolbar=no,location=no,menubar=no');
                     });
 
@@ -237,7 +254,7 @@
                     $button.find('.share_button_facebook').on('click', function(e){
                         e.preventDefault();
                         e.stopPropagation();
-                        var url = "https://www.facebook.com/sharer/sharer.php?u="+document.location.href;
+                        var url = "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(document.location.href);
                         window.open(url, 'Share on Facebook', "width=800,height=450,menubar=no,location=no,resizable=no,scrollbars=no,status=no");
                     });
 
