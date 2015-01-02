@@ -14,6 +14,7 @@
  */
 
 ;(function (factory) {
+
   if(typeof define==='function' && define.amd){
     // AMD
     define(['jquery'], factory);
@@ -242,8 +243,6 @@
 
                 }
 
-
-
                 $button.appendTo($el);
             });
 
@@ -252,7 +251,7 @@
     }
 
 
-    document.rapidvote = {};
+    $.rapidvote = {};
 
     // Create the jQuery plugin
     $.fn.rapidvote = function(options) {
@@ -267,7 +266,7 @@
             var instance = new RapidVote($this, options);
 
             $this.data('rapidvote', instance);
-            document.rapidvote[instance.poll_id]=instance;
+            $.rapidvote[instance.poll_id] = instance;
 
             instance.init();
         });
@@ -288,7 +287,7 @@
             return;
         }
 
-        document.rapidvote[poll_id].get_buttons_data(data);
+        $.rapidvote[poll_id].get_buttons_data(data);
     };
 
     $.rapidvoteSetJSONpDataCallback = function(poll_id, data){
@@ -301,7 +300,7 @@
             return;
         }
 
-        document.rapidvote[poll_id].set_buttons_data(data);
+        $.rapidvote[poll_id].set_buttons_data(data);
     };
 
     })
